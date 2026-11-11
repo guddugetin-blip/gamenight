@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wits &amp; Winks · Game Night Sign-up</title>
+<style>
+:root{--bg:#f6f4fc;--card:#fff;--tx:#1e1b2e;--mu:#6b6880;--ac:#4f46e5;--ac2:#eceafd;--bd:#e5e3f2;color-scheme:light only;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:linear-gradient(135deg,#4f46e5,#9333ea);color:#fff;padding:22px 18px 28px;border-radius:0 0 28px 28px}
+.brand{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.85;margin-bottom:4px}
+header h1{margin:0;font-size:24px}header p{margin:6px 0 0;opacity:.9;font-size:14px}
+main{max-width:640px;margin:0 auto;padding:16px 16px 40px}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--mu);margin:24px 0 8px}
+.card{background:#fff;border:1px solid var(--bd);border-radius:18px;padding:14px;margin:10px 0;box-shadow:0 2px 10px rgba(60,50,120,.08)}
+label{display:block;font-size:13px;color:var(--mu);margin:10px 0 4px}
+input,select,textarea{width:100%;padding:12px;border-radius:12px;border:1px solid var(--bd);background:#fff;color:var(--tx);font:inherit}
+button{font:inherit;border:0;border-radius:12px;padding:12px 16px;background:var(--ac);color:#fff;cursor:pointer;font-weight:600}
+button.ghost{background:var(--ac2);color:var(--ac)}button.red{background:none;color:#ef4444;padding:6px 10px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.feel{display:flex;gap:6px}.fb{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px;font-size:11px;background:var(--ac2);color:var(--tx);border:2px solid transparent;font-weight:500}
+.fb span{font-size:20px}.fb.on{border-color:var(--ac);background:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{padding:9px 14px;border-radius:99px;background:#fff;border:2px solid var(--bd);color:var(--tx);font-weight:500;font-size:14px}
+.chip.on{border-color:var(--ac);background:var(--ac2);color:var(--ac)}
+.go{width:100%;font-size:17px;padding:16px;margin-top:20px}
+.wa{display:block;text-align:center;text-decoration:none;background:#22c55e;color:#fff;font-weight:700;border-radius:14px;padding:16px;font-size:17px;margin-top:14px}
+.err{color:#ef4444;font-size:14px;margin-top:10px;text-align:center}
+.mu{color:var(--mu);font-size:13px}
+pre{white-space:pre-wrap;word-break:break-word;font:13px/1.4 system-ui,sans-serif;background:var(--ac2);border-radius:12px;padding:12px;max-height:220px;overflow:auto}
+</style>
+</head>
+<body>
+<header><div class="brand">Wits &amp; Winks Tabletop</div><h1>🎲 Game Night Sign-up</h1><p>Tell us which games you love and how well you play them. We’ll match you with the right table and the right partners.</p></header>
+<main id="app"></main>
+<script>
+var WA="6580153904";/* WhatsApp number with country code, digits only, e.g. 919812345678 */
+var GAMES=["Azul", "Azul Summer Pavilion", "Catan", "Codenames", "Flip 7", "Flip 7 Vengenace", "Pandemic", "Peranankan", "Scholars of South Tigris", "Shifting Stones", "Terraforming Mars", "Ticket to Ride", "Viticulture", "Wingspan"];
+var RT=["New to it","Learning","Can play","Comfortable","Strong","Expert · can teach"];
+var RD=["Never played, or want to try","Played a few times","Know the basics","Know the rules, play smoothly","Play confidently","Know every rule and strategy"];
+var FE=[[2,"❤️","Love it"],[1,"👍","Like it"],[0,"😐","It’s okay"],[-1,"👎","Not a fan"],[-2,"😡","Hate it"]];
+var STYLE=["Competitive","Casual and chilled","Team games","2-player games","Big groups","Quick games (under 30 min)","Long strategy games","Happy to teach beginners","Still a beginner"];
+var WHEN=["Weekday evenings","Weekends","Daytime"];
+var D={n:"",p:"",e:"",a:"",c:"",pf:[],w:[],g:[{n:"",s:3,f:0}]},done=null,err="";
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function render(){
+if(done){$("app").innerHTML=vDone();window.scrollTo(0,0);return}
+var h='<h2>About you</h2><div class="card"><label>Your name *</label><input id="n" value="'+esc(D.n)+'" oninput="D.n=this.value" autocomplete="name">'+
+'<label>Phone number *</label><input id="p" type="tel" value="'+esc(D.p)+'" oninput="D.p=this.value" autocomplete="tel">'+
+'<label>Email</label><input type="email" value="'+esc(D.e)+'" oninput="D.e=this.value" autocomplete="email" placeholder="you@example.com">'+
+'<label>Address or area</label><input value="'+esc(D.a)+'" oninput="D.a=this.value" autocomplete="street-address" placeholder="e.g. Kothrud, Pune"></div>';
+h+='<h2>Games you play</h2><datalist id="gl">'+GAMES.map(function(g){return'<option value="'+esc(g)+'">'}).join("")+'</datalist>';
+D.g.forEach(function(g,i){
+h+='<div class="card"><div class="row"><b>Game '+(i+1)+'</b>'+(D.g.length>1?'<button class="red" onclick="rm('+i+')">Remove</button>':"")+'</div>'+
+'<label>Game name (pick from the list or type your own)</label><input list="gl" value="'+esc(g.n)+'" oninput="D.g['+i+'].n=this.value" placeholder="e.g. Catan">'+
+'<label>How well do you play it?</label><select onchange="D.g['+i+'].s=+this.value">'+RT.map(function(t,k){return'<option value="'+k+'"'+(g.s===k?" selected":"")+'>'+t+' – '+RD[k]+'</option>'}).join("")+'</select>'+
+'<label>How do you feel about it?</label><div class="feel">'+FE.map(function(f){return'<button class="fb'+(g.f===f[0]?" on":"")+'" onclick="D.g['+i+'].f='+f[0]+';render()"><span>'+f[1]+'</span>'+f[2]+'</button>'}).join("")+'</div></div>'});
+h+='<button class="ghost" style="width:100%" onclick="D.g.push({n:\'\',s:3,f:0});render()">+ Add another game</button>';
+h+='<h2>How do you like to play?</h2><div class="chips">'+STYLE.map(function(t){return chip("pf",t)}).join("")+'</div>';
+h+='<h2>When can you play?</h2><div class="chips">'+WHEN.map(function(t){return chip("w",t)}).join("")+'</div>';
+h+='<h2>Anything else we should know?</h2><textarea rows="3" oninput="D.c=this.value" placeholder="Allergies, favourite snacks, people you’d like to play with…">'+esc(D.c)+'</textarea>';
+h+=(err?'<div class="err">'+esc(err)+'</div>':"")+'<button class="go" onclick="send()">Continue</button><p class="mu" style="text-align:center;margin-top:14px">Your details are only used by Wits &amp; Winks to match you with games and partners.</p>';
+var y=window.scrollY;$("app").innerHTML=h;window.scrollTo(0,y)}
+function chip(k,t){return'<button class="chip'+(D[k].indexOf(t)>-1?" on":"")+'" onclick="tg(\''+k+'\',this.textContent)">'+esc(t)+'</button>'}
+function tg(k,t){var i=D[k].indexOf(t);if(i>-1)D[k].splice(i,1);else D[k].push(t);render()}
+function rm(i){D.g.splice(i,1);render()}
+function build(){
+var gs=D.g.filter(function(g){return g.n.trim()});
+var fl={"2":"❤️ Loves it","1":"👍 Likes it","-1":"👎 Not a fan","-2":"😡 Hates it"};
+var m="Hi Wits & Winks! 👋 Here are my details for Game Night:\n\n*Name:* "+D.n.trim()+"\n*Phone:* "+D.p.trim()+"\n"+(D.e.trim()?"*Email:* "+D.e.trim()+"\n":"")+(D.a.trim()?"*Address:* "+D.a.trim()+"\n":"")+
+(D.pf.length?"*Play style:* "+D.pf.join(", ")+"\n":"")+(D.w.length?"*When:* "+D.w.join(", ")+"\n":"")+
+"\n*Games:*\n"+gs.map(function(g){return"• "+g.n.trim()+" – "+RT[g.s]+(fl[g.f]?" · "+fl[g.f]:"")}).join("\n")+
+(D.c.trim()?"\n\n*Comments:* "+D.c.trim():"");
+var o={n:D.n.trim(),p:D.p.trim(),e:D.e.trim(),a:D.a.trim(),c:D.c.trim(),pf:D.pf,w:D.w,g:gs.map(function(g){return{n:g.n.trim(),s:g.s,f:g.f}})};
+var code="WW1:"+btoa(unescape(encodeURIComponent(JSON.stringify(o))));
+return m+"\n\n(Please don’t edit the line below)\n"+code}
+function send(){
+err="";
+if(!D.n.trim()||!D.p.trim())err="Please add your name and phone number.";
+else if(D.p.replace(/\D/g,"").length<8)err="Please check your phone number.";
+else if(D.e.trim()&&!/^\S+@\S+\.\S+$/.test(D.e.trim()))err="Please check your email address.";
+else if(!D.g.some(function(g){return g.n.trim()}))err="Please add at least one game.";
+if(err){render();return}
+done=build();render()}
+function vDone(){
+var link="https://wa.me/"+WA+"?text="+encodeURIComponent(done);
+return'<div class="card" style="text-align:center;margin-top:20px"><div style="font-size:44px">🎉</div><b style="font-size:20px">Almost done, '+esc(D.n.trim().split(" ")[0])+'!</b><p class="mu">Tap the green button to send your answers to us on WhatsApp. Just press send in the chat that opens.</p>'+
+'<a class="wa" href="'+link+'" target="_blank" rel="noopener">Send on WhatsApp</a>'+
+'<button class="ghost" style="width:100%;margin-top:12px" onclick="cp()">Copy my answers instead</button><div id="cm" class="mu" style="margin-top:8px"></div></div>'+
+'<h2>Your answers</h2><pre>'+esc(done.replace(/\n\n\(Please[\s\S]*$/,""))+'</pre><button class="ghost" style="width:100%" onclick="done=null;render()">‹ Edit my answers</button>'}
+function cp(){
+function ok(){$("cm").textContent="Copied! Paste it in WhatsApp and send it to us."}
+function fb(){var t=document.createElement("textarea");t.value=done;document.body.appendChild(t);t.select();try{document.execCommand("copy");ok()}catch(e){$("cm").textContent="Couldn’t copy. Please use the WhatsApp button."}t.remove()}
+if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(done).then(ok,fb);else fb()}
+render();
+</script>
+</body>
+</html>
